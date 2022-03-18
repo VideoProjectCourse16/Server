@@ -17,18 +17,16 @@ export const passwordEncryption = (async ({ body: { username, password, repeatPa
                         return console.log('Cannot encrypt');
                     }
                     hashedPassword = hash;
-                    console.log(hash);
-                    console.log("Username " + username + " inserted" + "password" + hashedPassword)
                     res.locals.username = username;
                     res.locals.hashedPassword = hashedPassword;
                     next();
                 })
             })
         }else{
-            return res.status(401).json("Password and repeat Password are different");
+            return res.status(401).json({message:`Password and repeat Password are different`});
         }
 
     } else {
-        return res.status(401).json("Please insert all form fields")
+        return res.status(401).json({message:`Please insert all form fields`})
     }
 })

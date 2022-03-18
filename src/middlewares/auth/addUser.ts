@@ -11,7 +11,7 @@ export const addUser = (async (_: Request, res: Response, next: any) => {
     
     
     if ( users.some((user) =>user.username === res.locals.username)) {
-        return res.status(401).json(`Username ${username} already exists`);
+        return res.status(401).json({message:`Username ${username} already exists`});
     } else {
         const max = Math.max(...users.map(({ id }) => Number(id)) as number[]) + 1;
         const docRef = db.collection('Users').doc(String(max));

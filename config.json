@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "progettovideoondemandsja",
+  "private_key_id": "b1066059cf88115aeab5268d5932b88f06c02121",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCWPvlyfCINllKP\nyumfbqNnyenoTFLxiNmXa7yVnrVcwmhHLP65t8EG/CAAQAN1qgD9j3NhlaeU5fBh\n3bcqkTot3sza+H4GnLFZ2VKo8TFjwuTwNKGx4E5+cRyxq4AtttfbaJzTVdDRyJWT\nRKQ3qd1oGcxIeXFfKjKHBw+LC+o85C901lZLIPUGU+yMcre4/oNtYwy6MhimslZf\na1chUus72yROnflmjZic9C9ctjFGf/OZ4UkblPuy3XVtb8xIDvscVdvE3H//Av5n\nfLzGtRqErnsLwuG3Cu5VbwZ6zWWvPmrhIW+Iy+YgbMJmC3bBJ6PC5+k28af3Uu5N\nwB2UxYpzAgMBAAECggEABwfSgUA8Wo4gWp+d/r8vV7wfNBST8iyf6fsCffeSiwfw\nsz45oBQCv1TIrWyajyBEH+KB2PhwOTlWcG3u3UfHTiuesGom7vv9PI+GHNTZEzy3\nCqzAY60qqEhR3rOkw/7cfYm9gqRvOzr7fx5Acq5deczeq+GGWrzxwld/htdyUiR5\nkkubemErWhlyu/jDC3Hfwr8a7ZTdvEFtsYEfaQUogsoC5gXJIntr3jyhddHkNOWZ\nDNPFYhOjGaKTHmw3xnv4y0sxOQgTUYMg7xALgWeIjUJYFwU3vrsyqF5EOSfLtfmR\nZyx3dxRqYx/Sc9UCgxZ/XM9pRkfYMvC89K5hMcOPCQKBgQDMenj5OyvIc62+dD+F\nBkw898xIiwCa/YOnoYSeW/skiIWdPIrRKMc2ud35lMQ8NwxWkd0FeeY65L2PDqd/\nFB0nJFoOdx3cuAf4JrnPYl2EU9PO4G70Tlourd432EKPDhM1lpbCOVHCLnutDJIB\n6hZ6uDaF9Fbx+oMye5giSh8eLQKBgQC8GlVYRPusBQ2ZGc3kM1RJb8G5ek3Snkr2\nMRdJ472cCUigbs7uc/Da1oL7ZJ0toLGqQbnhbXvmoh+ladhG3yEZtZvO2/DQY6W7\nvWHkPlhOTHhLrNvAhsVPpxtdhjHBezkeBc2n2cvlnUE4iLtEZDa/OhdIPUaV8DxM\nVQ5LAxVPHwKBgQDGgn+/Nfqjd+pM435nHl4VMlxYcNn9nfCaZOvi8Vk3dnKA263I\nsNX2AyvEiPCZpLeNs73m+xjQRBDjOU7SyCwlO91R/cI37VGPT8lD1DMFrHwMc0ZE\nV2yltJXvkTvMtdVgSPnDRPJimc3nijSVNzTrnrsQAM4HzTRhZiuj3mGnYQKBgDfM\nk/6gUAwCX7tH9VS5iUpTlaMgzc8p19DaVS89GLUd5+Z3mHkR+aPhOG+8tAeiALIh\n1zMxGC0dcMfP8zFq5VXMEtE1W2Vl+fcMQerEN8vaUWEZgQLGt+deCfcfZMkhdZsb\nW5tsN1kA4iUUIoEyPS9S2y85xiOaZTi7jobf/kU/AoGAXCfnidy/kcnKHKHEYl22\nYXjjfUfU+WVjgpIPM1g2bjvX496+Ap3pw0Mj55o/GpRmlJpCYv1hVP/1pnPzlALO\nafzJumoKcqYzfOaIOdB772a4E48MfvEmlDHIVHMWSkFiPWiLp7Uxs4mJQfU/oBal\n5Nnz92ZycDsMh8CLZWl9zlQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-n13w3@progettovideoondemandsja.iam.gserviceaccount.com",
+  "client_id": "103302448056244299450",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-n13w3%40progettovideoondemandsja.iam.gserviceaccount.com"
+}

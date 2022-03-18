@@ -1,0 +1,34 @@
+import { UserSignup } from "../../models/user.model";
+import { Request, Response } from "express";
+import * as bcrypt from "bcrypt";
+
+
+export const passwordEncryption = (async ({ body: { username, password, repeatPassword } }: Request<any, any, UserSignup>, res: Response, next: any) => {
+    var hashedPassword: string;
+    if (username! && password! && repeatPassword!) {
+        if (password! === repeatPassword!) {
+            // Encryption of the string password
+            bcrypt.genSalt(10, function (err, Salt) {
+
+                // The bcrypt is used for encrypting password.
+                bcrypt.hash(password, Salt, function (err, hash) {
+
+                    if (err) {
+                        return console.log('Cannot encrypt');
+                    }
+                    hashedPassword = hash;
+                    console.log(hash);
+                    console.log("Username " + username + " inserted" + "password" + hashedPassword)
+                    res.locals.username = username;
+                    res.locals.hashedPassword = hashedPassword;
+                    next();
+                })
+            })
+        }else{
+            return res.status(401).json("Password and repeat Password are different");
+        }
+
+    } else {
+        return res.status(401).json("Please insert all form fields")
+    }
+})

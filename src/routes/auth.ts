@@ -3,7 +3,7 @@ import express from "express";
 import { passwordEncryption } from "../middlewares/auth/encryption";
 import { addUser } from "../middlewares/auth/addUser";
 import { checkData } from "../middlewares/auth/checkData";
-import { UserSignup } from "../models/user.model";
+import { User, UserSignup } from "../models/user.model";
 
 const router = express.Router();
 
@@ -17,15 +17,11 @@ router.post(`/signup`, passwordEncryption, addUser, (_, res) => {
 })
 
 router.post(`/signin`, checkData, (_, res) => {
-    let user = res.locals.user;
-    user = {
-        id: user.id,              //tolgo la password così mando solo id e username
-        username: user.username
-    }
+    let {name,surname,username,id} = res.locals.user;
     res.status(200).json(
         {
             message: `Succesfully logged in!`,
-            user: user
+            user: {name,surname,username,id}
         })
 })
 

@@ -1,4 +1,4 @@
-import { User } from "../../models/user.model";
+import { User, UserSignin } from "../../models/user.model";
 import { Request, Response } from "express";
 import { getFirestore } from "firebase-admin/firestore";
 import { formatCollection } from '../../utils';
@@ -6,7 +6,7 @@ import * as bcrypt from "bcrypt";
 
 const db = getFirestore();
 
-export const checkData = (async ({ body: { username, password } }: Request<any, any, User>, res: Response, next: any) => {
+export const checkData = (async ({ body: { username, password } }: Request<any, any, UserSignin>, res: Response, next: any) => {
     const users = formatCollection(await db.collection("Users").get()) as User[]
     const user = users.find((user) => user.username === username);
     if (user!) {

@@ -1,5 +1,5 @@
-import express from "express";
-import { getFirestore } from "firebase-admin/firestore";
+import express, {  Request } from "express";
+import { getFirestore }  from "firebase-admin/firestore";
 import { initializeApp, cert } from "firebase-admin/app";
 import { formatCollection } from '../utils';
 import { Movie } from '../models/movies.model';
@@ -12,15 +12,18 @@ const router = express.Router();
 initializeApp({ credential: cert(serviceAccount) }); //per utilizzarlo
 const db = getFirestore();
 
+type QueryModels = {
+    title: string,
+    genre: string
+}
 
 
-
-router.get('/', async ({ query: { title, genre } }, res) => {
+router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, QueryModels>, res) => {
     const films = db.collection("Films");
-    let movies = formatCollection(await films.get());
-    title && (movies = movies.filter(movie => movie.title.includes(title)));
-    genre && (movies = movies.filter(movie => movie.genre === genre!));
-    return res.status(200).json(movies);
+    let movies=  formatCollection(await films.get());
+    title && (movies=movies.filter(movie => movie.title.includes(title)));
+    genre && (movies=movies.filter(movie => movie.genre===genre!));
+    res.json(movies);
 })
 
 router.get('/:id', async ({ params: { id } }, res) => {

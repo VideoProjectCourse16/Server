@@ -12,12 +12,12 @@ router.post(`/favorites`,userInfo,addFavorite,(_,res)=>{
         movieId:res.locals.movieId
     }
     return res.status(200).json({ message: `${favorite.username} added to favorites movie with id:${favorite.movieId}`,
-     favorite: favorite})
+    favorite: favorite})
 })
 router.get(`/favorites`,userInfo,getFavorites,(_,res)=>{
 
     return res.status(200).json({ message: `${res.locals.username} favorites movies:`,
-     favorites:res.locals.userFavorites })
+    favorites:res.locals.userFavorites })
 })
 
 export default router;

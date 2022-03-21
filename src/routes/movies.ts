@@ -4,12 +4,12 @@ import { initializeApp, cert } from "firebase-admin/app";
 import { formatCollection } from '../utils';
 import { Movie } from '../models/movies.model';
 
-const serviceAccount = require('../../config.json'); //per configurare il project_id in firebase
+const serviceAccount = require('../../config.json'); //for config firebase project_id 
 
 const router = express.Router();
 
 
-initializeApp({ credential: cert(serviceAccount) }); //per utilizzarlo
+initializeApp({ credential: cert(serviceAccount) }); //for use it
 const db = getFirestore();
 
 type QueryModels = {

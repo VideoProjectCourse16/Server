@@ -20,16 +20,16 @@ type QueryModels = {
 
 router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, QueryModels>, res) => {
     const films = db.collection("Films");
-    let movies=  formatCollection(await films.get());
-    title && (movies=movies.filter(movie => movie.title.includes(title)));
-    genre && (movies=movies.filter(movie => movie.genre===genre!));
+    let movies=  formatCollection<Movie>(await films.get());
+    title && (movies=movies.filter(({title: mTitle}) => mTitle.includes(title)));
+    genre && (movies=movies.filter(({genre: mGenre}) => mGenre.includes(genre)));
     res.json(movies);
 })
 
 router.get('/:id', async ({ params: { id } }, res) => {
     const films = db.collection("Films");
-    let movies = formatCollection(await films.get());
-    let movie = movies.find(movie => id === movie.id)
+    let movies = formatCollection<Movie>(await films.get());
+    let movie = movies.find(({id: mId}) => id === mId)
     return movie ?
         res.status(200).json({ movie: movie }) :
         res.status(404).json({

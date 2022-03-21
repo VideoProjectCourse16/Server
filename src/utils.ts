@@ -1,9 +1,8 @@
 import { Movie } from './models/movies.model';
 
-export const formatCollection  = (collection: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>) => {
-    const data: Record<any, any>[] = [];
-    collection.forEach((doc) => {
-        data.push({id:doc.id, ...doc.data()});
+export const formatCollection = <T=any>(collection: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>)  => {
+    const data: (T & {id: string})[] = collection.docs.map((doc) => {
+        return {id: doc.id,...doc.data() as T};
     });
     return data;
 }

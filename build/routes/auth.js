@@ -8,13 +8,13 @@ var encryption_1 = require("../middlewares/auth/encryption");
 var addUser_1 = require("../middlewares/auth/addUser");
 var checkData_1 = require("../middlewares/auth/checkData");
 var router = express_1.default.Router();
-router.post("/auth/signup", encryption_1.passwordEncryption, addUser_1.addUser, function (_, res) {
+router.post("/signup", encryption_1.passwordEncryption, addUser_1.addUser, function (_, res) {
     res.status(200).json({
         message: "User ".concat(res.locals.username, " succesfully registered!"),
         user: res.locals.username
     });
 });
-router.post("/auth/signin", checkData_1.checkData, function (_, res) {
+router.post("/signin", checkData_1.checkData, function (_, res) {
     var user = res.locals.user;
     user = {
         id: user.id,

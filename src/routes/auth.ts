@@ -6,7 +6,7 @@ import { checkData } from "../middlewares/auth/checkData";
 
 const router = express.Router();
 
-router.post(`/auth/signup`, passwordEncryption, addUser, (_, res) => {
+router.post(`/signup`, passwordEncryption, addUser, (_, res) => {
     res.status(200).json(
         {
             message: `User ${res.locals.username} succesfully registered!`,
@@ -14,7 +14,7 @@ router.post(`/auth/signup`, passwordEncryption, addUser, (_, res) => {
         })
 })
 
-router.post(`/auth/signin`, checkData, (_, res) => {
+router.post(`/signin`, checkData, (_, res) => {
     let user = res.locals.user;
     user = {
         id: user.id,              //tolgo la password così mando solo id e username

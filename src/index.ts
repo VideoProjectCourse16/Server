@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(cors()) //si utilizza così
 
 app.use('/', movies)
-app.use('/', auth)
+app.use('/auth', auth)
 
 
 

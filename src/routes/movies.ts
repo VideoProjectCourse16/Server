@@ -17,24 +17,25 @@ const db = getFirestore();
 
 
 
-router.get('/', async({query: {title}}, res) => {
+router.get('/', async({query: {title,genre}}, res) => {
     const films = db.collection("Films");
-    let resp =  formatCollection(await films.get());
-    title && (resp=resp.filter(item => item.title.includes(title)));
-    res.json(resp);
+    let movies =  formatCollection(await films.get());
+    title && (movies=movies.filter(movie => movie.title.includes(title)));
+    genre && (movies=movies.filter(movie => movie.genre===genre!));
+    res.json(movies);
 })
 
 
-router.post('/', async ({body: {title, description}}, res) => {
-    const resp = formatCollection(await db.collection("Films").get());
-    const max = Math.max(...resp.map(({id}) => Number(id)) as number[]) + 1;
-    const docRef = db.collection('Films').doc(String(max));
-    await docRef.set({
-        title: title,
-        description: description
-    })
-    res.json({message: 'film aggiunto'});
-})
+// router.post('/', async ({body: {title, description}}, res) => {
+//     const resp = formatCollection(await db.collection("Films").get());
+//     const max = Math.max(...resp.map(({id}) => Number(id)) as number[]) + 1;
+//     const docRef = db.collection('Films').doc(String(max));
+//     await docRef.set({
+//         title: title,
+//         description: description
+//     })
+//     res.json({message: 'film aggiunto'});
+// })
 
 
 

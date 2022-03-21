@@ -32,3 +32,22 @@
 
 //     res.json({message: "db clone succesful"})
 // })
+
+
+// Ma
+//router.get('/films', async ({ query: { genre } }, res) => {
+
+//     const responseMovie = await axios.get<Movies>(`https://api.themoviedb.org/3/discover/movie?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=It&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&with_watch_monetization_types=flatrate`);
+//     const responseGenres = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=en-US`);
+//     const films: Movie[] = responseMovie.data.results;
+//     const genres: Genre[] = responseGenres.data.genres;
+//     const moviesWithGenres = genres.map(genre => {
+//         films.map(film => {
+//             if (film.genre_ids[0] === genre.id) {
+//                 film.genre = genre.name;
+//             }
+//         })
+//         return films;
+//     })
+//     return res.json(moviesWithGenres);
+// }

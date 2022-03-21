@@ -2,9 +2,7 @@ import express from "express";
 import { getFirestore }  from "firebase-admin/firestore";
 import { initializeApp, cert } from "firebase-admin/app";
 import { formatCollection } from '../utils';
-import axios from "axios";
-import { Movie, Trailer } from '../models/movies.model';
-import { Genre } from "../models/genre";
+import { Movie } from '../models/movies.model';
 
 const serviceAccount = require('../../config.json'); //per configurare il project_id in firebase
 

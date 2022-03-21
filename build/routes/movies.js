@@ -61,7 +61,8 @@ router.get('/', function (_a, res) {
                     movies = _c.apply(void 0, [_d.sent()]);
                     title && (movies = movies.filter(function (movie) { return movie.title.includes(title); }));
                     genre && (movies = movies.filter(function (movie) { return movie.genre === genre; }));
-                    return [2 /*return*/, res.status(200).json(movies)];
+                    res.json(movies);
+                    return [2 /*return*/];
             }
         });
     });
@@ -69,7 +70,7 @@ router.get('/', function (_a, res) {
 router.get('/:id', function (_a, res) {
     var id = _a.params.id;
     return __awaiter(void 0, void 0, void 0, function () {
-        var films, movies, _b;
+        var films, movies, _b, movie;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -78,15 +79,13 @@ router.get('/:id', function (_a, res) {
                     return [4 /*yield*/, films.get()];
                 case 1:
                     movies = _b.apply(void 0, [_c.sent()]);
-                    movies.filter(function (movie) {
-                        if (movie.id === id) {
-                            return res.status(200).json({ movie: movie });
-                        }
-                        else {
-                            return res.status(404).json({ message: "Not found movie with id ".concat(id) });
-                        }
-                    });
-                    return [2 /*return*/];
+                    movie = movies.find(function (movie) { return id === movie.id; });
+                    return [2 /*return*/, movie ?
+                            res.status(200).json({ movie: movie }) :
+                            res.status(404).json({
+                                error: '404',
+                                message: "Not found movie with id: ".concat(id)
+                            })];
             }
         });
     });

@@ -3,6 +3,8 @@ export interface User {
     password: string;
 }
 export interface UserSignup {
+    name: string;
+    surname: string;
     username: string;
     password: string;
     repeatPassword:string;

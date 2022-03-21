@@ -3,14 +3,16 @@ import express from "express";
 import { passwordEncryption } from "../middlewares/auth/encryption";
 import { addUser } from "../middlewares/auth/addUser";
 import { checkData } from "../middlewares/auth/checkData";
+import { UserSignup } from "../models/user.model";
 
 const router = express.Router();
 
 router.post(`/signup`, passwordEncryption, addUser, (_, res) => {
+    let {name,surname,username}:UserSignup= res.locals.user;
     res.status(200).json(
         {
             message: `User ${res.locals.username} succesfully registered!`,
-            user: res.locals.username
+            user: {name,surname, username}
         })
 })
 

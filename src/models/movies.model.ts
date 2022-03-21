@@ -20,7 +20,7 @@ export interface Movies {
     results: Movie[];
 }
 
-export interface SingleMov {
+export interface Trailer {
     iso_639_1: string;
     iso_3166_1: string;
     name: string;
@@ -35,6 +35,6 @@ export interface SingleMov {
 
 export interface RootObject {
     id: number;
-    results: SingleMov[];
+    results: Trailer[];
 }
 

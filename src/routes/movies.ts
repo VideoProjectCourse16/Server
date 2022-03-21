@@ -18,9 +18,10 @@ router.get('/', async({query: {genre}},res)=>{
     
     const films =  await axios.get<Movie[]>(`https://api.themoviedb.org/3/discover/movie?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=It&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&with_watch_monetization_types=flatrate`);
     if(genre){ 
-        const genders: Genre[] =  await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=en-US`);
-        const filterGenre = genders.filter(({name})=>name==genre).map(({id})=>id)
-        films.data.filter(({genre_ids})=>genre_ids[0]== filterGenre[0])
+        const genders =  await axios.get(`https://api.themoviedb.org/3/genre/movie/list?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=en-US`);
+        //const filterGenre = genders.data.filter((item: Genre)=>item.name==genre).map((item: Genre)=>item.id)
+        //const filtRes=films.data.filter(({genre_ids})=>genre_ids[0]== filterGenre[0])
+        res.json(genders.data)
     }
     res.json(films.data);
 })

@@ -11,7 +11,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors()) //si utilizza così
 
-app.use('/', movies)
+app.use('/movies', movies)
 app.use('/', auth)
 
 

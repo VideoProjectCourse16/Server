@@ -32,6 +32,10 @@ router.post('/', async ({body: {title, description}}, res) => {
     res.json({message: 'film aggiunto'});
 })
 
+router.get('/', (_,res)=>{
+    res.json({message: "ciao"})
+})
+
 /*router.get('/', async(_,res)=>{
     const films = db.collection("Films");
     let resp = formatCollection(await films.get());
@@ -39,8 +43,8 @@ router.post('/', async ({body: {title, description}}, res) => {
 })*/
 
 router.get('/axios', async(_,res)=>{
-    const films =  await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=It&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&with_watch_monetization_types=flatrate`);;
-    res.json(films);
+    const films =  await axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=d0e9057c846dee14124bd893b0ecdbfd&language=It&sort_by=popularity.desc&include_adult=false&include_video=true&page=1&with_watch_monetization_types=flatrate`);
+    res.json(films.data);
 })
 
 router.get('/axios/:id', async({params: {id}}, res)=>{

@@ -39,55 +39,66 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = __importDefault(require("express"));
 var firestore_1 = require("firebase-admin/firestore");
 var app_1 = require("firebase-admin/app");
 var utils_1 = require("../utils");
-var express_1 = __importDefault(require("express"));
 var serviceAccount = require('../../config.json'); //per configurare il project_id in firebase
 var router = express_1.default.Router();
 (0, app_1.initializeApp)({ credential: (0, app_1.cert)(serviceAccount) }); //per utilizzarlo
 var db = (0, firestore_1.getFirestore)();
-router.get('/', function (_, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var films, resp, _a;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                films = db.collection("Films");
-                _a = utils_1.formatCollection;
-                return [4 /*yield*/, films.get()];
-            case 1:
-                resp = _a.apply(void 0, [_b.sent()]);
-                res.json(resp);
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.post('/', function (_a, res) {
-    var _b = _a.body, title = _b.title, description = _b.description;
+router.get('/', function (_a, res) {
+    var _b = _a.query, title = _b.title, genre = _b.genre;
     return __awaiter(void 0, void 0, void 0, function () {
-        var resp, _c, max, docRef;
+        var films, movies, _c;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
+                    films = db.collection("Films");
                     _c = utils_1.formatCollection;
-                    return [4 /*yield*/, db.collection("Films").get()];
+                    return [4 /*yield*/, films.get()];
                 case 1:
-                    resp = _c.apply(void 0, [_d.sent()]);
-                    max = Math.max.apply(Math, resp.map(function (_a) {
-                        var id = _a.id;
-                        return Number(id);
-                    })) + 1;
-                    docRef = db.collection('Films').doc(String(max));
-                    return [4 /*yield*/, docRef.set({
-                            title: title,
-                            description: description
-                        })];
-                case 2:
-                    _d.sent();
-                    res.json({ message: 'film aggiunto' });
+                    movies = _c.apply(void 0, [_d.sent()]);
+                    title && (movies = movies.filter(function (movie) { return movie.title.includes(title); }));
+                    genre && (movies = movies.filter(function (movie) { return movie.genre === genre; }));
+                    return [2 /*return*/, res.status(200).json(movies)];
+            }
+        });
+    });
+});
+router.get('/:id', function (_a, res) {
+    var id = _a.params.id;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var films, movies, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    films = db.collection("Films");
+                    _b = utils_1.formatCollection;
+                    return [4 /*yield*/, films.get()];
+                case 1:
+                    movies = _b.apply(void 0, [_c.sent()]);
+                    movies.filter(function (movie) {
+                        if (movie.id === id) {
+                            return res.status(200).json({ movie: movie });
+                        }
+                        else {
+                            return res.status(404).json({ message: "Not found movie with id ".concat(id) });
+                        }
+                    });
                     return [2 /*return*/];
             }
         });
     });
 });
+// router.post('/', async ({body: {title, description}}, res) => {
+//     const resp = formatCollection(await db.collection("Films").get());
+//     const max = Math.max(...resp.map(({id}) => Number(id)) as number[]) + 1;
+//     const docRef = db.collection('Films').doc(String(max));
+//     await docRef.set({
+//         title: title,
+//         description: description
+//     })
+//     res.json({message: 'film aggiunto'});
+// })
 exports.default = router;

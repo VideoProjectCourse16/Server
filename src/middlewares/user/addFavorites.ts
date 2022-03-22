@@ -7,7 +7,7 @@ import { formatCollection } from '../../utils';
 const db = getFirestore();
 
 export const addFavorite = (async ({ body: { movieId } }: Request, res: Response, next: any) => {
-    let { username } = res.locals.user;
+    let { username } = res.locals.token;
     const films = db.collection("Films");
     let movies = formatCollection(await films.get());
     const favorites = formatCollection<Favorite>(await db.collection("Favorites").get());

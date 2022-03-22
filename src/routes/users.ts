@@ -3,6 +3,7 @@ import { getFirestore } from "firebase-admin/firestore";
 import { userInfo } from "../middlewares/auth/userInfo";
 import { addFavorite } from "../middlewares/user/addFavorites";
 import { getFavorites } from "../middlewares/user/getFavorites";
+import { auth } from "../middlewares/auth/auth";
 import { Favorite } from "../models/favorites.model";
 import { User } from "../models/user.model";
 import { formatCollection } from "../utils";
@@ -11,15 +12,16 @@ const router = express.Router();
 
 const db = getFirestore();
 
-router.post(`/favorites`,userInfo,addFavorite,(_,res)=>{
-    let favorite:Favorite = {
-        username: res.locals.username,
+router.post(`/favorites`,auth,userInfo,addFavorite,(_,res)=>{
+    let favorite:Partial<Favorite> = {
+        //username: res.locals.username,
         movieId:res.locals.movieId
     }
-    return res.status(200).json({ message: `${favorite.username} added to favorites movie with id:${favorite.movieId}`,
+    const {username} = res.locals.token
+    return res.status(200).json({ message: `${username} added to favorites movie with id:${favorite.movieId}`,
     favorite: favorite})
 })
-router.get(`/favorites`,userInfo,getFavorites,(_,res)=>{
+router.get(`/favorites`,auth,userInfo,getFavorites,(_,res)=>{
 
     return res.status(200).json({ message: `${res.locals.username} favorites movies:`,
     favorites:res.locals.userFavorites })

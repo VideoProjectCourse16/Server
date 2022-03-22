@@ -8,7 +8,7 @@ const db = getFirestore();
 export const userInfo = (async ({ body: { username } }: Request, res: Response, next: any) => {
     const users = formatCollection(await db.collection("Users").get()) as User[]
     const user = users.find((user) => user.username === username);
-     (user!) ?
+    (user!) ?
         (res.locals.user = user,
         next()) :
         (res.status(404).json({error:'404',message:`insert the right username`}))

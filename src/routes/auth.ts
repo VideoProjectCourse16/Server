@@ -4,7 +4,6 @@ import { auth } from "../middlewares/auth/auth";
 import { checkData } from "../middlewares/auth/checkData";
 import { User, UserSignup } from '../models/user.model';
 import { formatCollection } from "../utils";
-import { userInfo } from "../middlewares/auth/userInfo";
 import jwt from "jsonwebtoken";
 import { Token } from "../models/token.models";
 import db from "../connection/connection";
@@ -13,7 +12,7 @@ const router = express.Router();
 
 router.post(`/signup`, passwordEncryption, async (_, res) => {
     let { name, surname, username }: UserSignup = res.locals.user;
-    let password = res.locals.hashedPassword
+    let password: string = res.locals.hashedPassword
     const users = formatCollection<User>(await db.collection("Users").get());
     if (users.some(({ username }) => username === res.locals.username)) {
         return res.status(401).json({ message: `Username ${username} already exists` });
@@ -35,7 +34,7 @@ router.post(`/signup`, passwordEncryption, async (_, res) => {
 })
 
 router.post(`/signin`, checkData, ({ body }, res) => {
-    let { username } = res.locals.user;
+    let { username }: User = res.locals.user;
     const token = jwt.sign(body, 'shhhhh')
     res.status(200).json(
         {
@@ -45,8 +44,8 @@ router.post(`/signin`, checkData, ({ body }, res) => {
 })
 
 router.get(`/me`, auth, (_, res) => {
-    const { username, iat } = res.locals.token as Token;
-    const { name, surname, id } = res.locals.user;
+    const { username, iat }: Token = res.locals.token;
+    const { name, surname, id }: {id: number} & User = res.locals.user;
     const user = { username, id, name, surname, iat }
 
     return res.status(200).json({

@@ -5,7 +5,7 @@ import db from "../connection/connection";
 
 const router = express.Router();
 
-router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, Partial<Movie>>, res) => {
+router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, Movie>, res) => {
     const films = db.collection("Films");
     let movies=  formatCollection<Movie>(await films.get());
     title && (movies=movies.filter(({title: mTitle}) => mTitle.toLocaleLowerCase().includes(title.toLocaleLowerCase())));
@@ -13,7 +13,7 @@ router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, Partial<Movie>
     res.json(movies);
 })
 
-router.get('/:id', async ({ params: { id }}: Request<Partial<Movie>, {}, {}, {}>, res) => {
+router.get('/:id', async ({ params: { id }}: Request<Movie, {}, {}, {}>, res) => {
     const films = db.collection("Films");
     let movies = formatCollection<Movie>(await films.get());
     let movie = movies.find(({id: mId}) => id === mId)

@@ -6,7 +6,7 @@ import { formatCollection } from '../../utils';
 
 export const userInfo = (async (_: Request, res: Response, next: any) => {
     const users = formatCollection(await db.collection("Users").get()) as User[]
-    const {username} = res.locals.token;
+    const {username}: User = res.locals.token;
     const user = users.find((user) => user.username === username);
     (user!) ?
         (res.locals.user = user,

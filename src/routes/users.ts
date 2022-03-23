@@ -1,5 +1,4 @@
 import express from "express";
-import { getFirestore } from "firebase-admin/firestore";
 import { userInfo } from "../middlewares/auth/userInfo";
 import { addFavorite } from "../middlewares/user/addFavorites";
 import { getFavorites } from "../middlewares/user/getFavorites";
@@ -7,10 +6,9 @@ import { auth } from "../middlewares/auth/auth";
 import { Favorite } from "../models/favorites.model";
 import { User } from "../models/user.model";
 import { formatCollection } from "../utils";
+import db from "../connection/connection";
 
 const router = express.Router();
-
-const db = getFirestore();
 
 router.post(`/favorites`,auth,userInfo,addFavorite,(_,res)=>{
     let favorite:Partial<Favorite> = {

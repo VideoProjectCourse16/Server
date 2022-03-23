@@ -1,32 +1,19 @@
 import express, {  Request } from "express";
-import { getFirestore }  from "firebase-admin/firestore";
-import { initializeApp, cert } from "firebase-admin/app";
 import { formatCollection } from '../utils';
 import { Movie } from '../models/movies.model';
-
-const serviceAccount = require('../../config.json'); //for config firebase project_id 
+import db from "../connection/connection";
 
 const router = express.Router();
 
-
-initializeApp({ credential: cert(serviceAccount) }); //for use it
-const db = getFirestore();
-
-type QueryModels = {
-    title: string,
-    genre: string
-}
-
-
-router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, QueryModels>, res) => {
+router.get('/', async({query: {title,genre}}: Request<{}, {}, {}, Partial<Movie>>, res) => {
     const films = db.collection("Films");
     let movies=  formatCollection<Movie>(await films.get());
-    title && (movies=movies.filter(({title: mTitle}) => mTitle.includes(title)));
-    genre && (movies=movies.filter(({genre: mGenre}) => mGenre.includes(genre)));
+    title && (movies=movies.filter(({title: mTitle}) => mTitle.toLocaleLowerCase().includes(title.toLocaleLowerCase())));
+    genre && (movies=movies.filter(({genre: mGenre}) => mGenre.toLocaleLowerCase().includes(genre.toLocaleLowerCase())));
     res.json(movies);
 })
 
-router.get('/:id', async ({ params: { id } }, res) => {
+router.get('/:id', async ({ params: { id }}: Request<Partial<Movie>, {}, {}, {}>, res) => {
     const films = db.collection("Films");
     let movies = formatCollection<Movie>(await films.get());
     let movie = movies.find(({id: mId}) => id === mId)

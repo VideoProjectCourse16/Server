@@ -1,19 +1,15 @@
 import express from "express";
-import { Request, Response } from "express";
-
 import { passwordEncryption } from "../middlewares/auth/encryption";
 import { auth } from "../middlewares/auth/auth";
 import { checkData } from "../middlewares/auth/checkData";
 import { User, UserSignup } from '../models/user.model';
 import { formatCollection } from "../utils";
 import { userInfo } from "../middlewares/auth/userInfo";
-import { getFirestore } from "firebase-admin/firestore";
 import jwt from "jsonwebtoken";
 import { Token } from "../models/token.models";
+import db from "../connection/connection";
 
 const router = express.Router();
-
-const db = getFirestore();
 
 router.post(`/signup`, passwordEncryption, async (_, res) => {
     let { name, surname, username }: UserSignup = res.locals.user;

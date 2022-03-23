@@ -13,9 +13,8 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.formatCollection = void 0;
 var formatCollection = function (collection) {
-    var data = [];
-    collection.forEach(function (doc) {
-        data.push(__assign({ id: doc.id }, doc.data()));
+    var data = collection.docs.map(function (doc) {
+        return __assign({ id: doc.id }, doc.data());
     });
     return data;
 };

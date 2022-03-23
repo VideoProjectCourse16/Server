@@ -41,72 +41,51 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var firestore_1 = require("firebase-admin/firestore");
-var app_1 = require("firebase-admin/app");
+var userInfo_1 = require("../middlewares/auth/userInfo");
+var addFavorites_1 = require("../middlewares/user/addFavorites");
+var getFavorites_1 = require("../middlewares/user/getFavorites");
+var auth_1 = require("../middlewares/auth/auth");
 var utils_1 = require("../utils");
-var serviceAccount = require('../../config.json'); //for config firebase project_id 
 var router = express_1.default.Router();
-(0, app_1.initializeApp)({ credential: (0, app_1.cert)(serviceAccount) }); //for use it
 var db = (0, firestore_1.getFirestore)();
-router.get('/', function (_a, res) {
-    var _b = _a.query, title = _b.title, genre = _b.genre;
+router.post("/favorites", auth_1.auth, userInfo_1.userInfo, addFavorites_1.addFavorite, function (_, res) {
+    var favorite = {
+        //username: res.locals.username,
+        movieId: res.locals.movieId
+    };
+    var username = res.locals.token.username;
+    return res.status(200).json({ message: "".concat(username, " added to favorites movie with id:").concat(favorite.movieId),
+        favorite: favorite });
+});
+router.get("/favorites", auth_1.auth, userInfo_1.userInfo, getFavorites_1.getFavorites, function (_, res) {
+    return res.status(200).json({ message: "".concat(res.locals.username, " favorites movies:"),
+        favorites: res.locals.userFavorites });
+});
+router.delete('/:id', function (_a, res) {
+    var id = _a.params.id;
     return __awaiter(void 0, void 0, void 0, function () {
-        var films, movies, _c;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var users, _b, index;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    films = db.collection("Films");
-                    _c = utils_1.formatCollection;
-                    return [4 /*yield*/, films.get()];
+                    _b = utils_1.formatCollection;
+                    return [4 /*yield*/, db.collection("Users").get()];
                 case 1:
-                    movies = _c.apply(void 0, [_d.sent()]);
-                    title && (movies = movies.filter(function (_a) {
-                        var mTitle = _a.title;
-                        return mTitle.includes(title);
-                    }));
-                    genre && (movies = movies.filter(function (_a) {
-                        var mGenre = _a.genre;
-                        return mGenre.includes(genre);
-                    }));
-                    res.json(movies);
+                    users = _b.apply(void 0, [_c.sent()]);
+                    index = users.findIndex(function (_a) {
+                        var uid = _a.id;
+                        return uid === id;
+                    });
+                    if (index > -1) {
+                        db.collection('Users').doc(id).delete();
+                        res.json({ message: "user removed" });
+                    }
+                    else {
+                        res.status(404).json({ error: "404", message: "User not found" });
+                    }
                     return [2 /*return*/];
             }
         });
     });
 });
-router.get('/:id', function (_a, res) {
-    var id = _a.params.id;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var films, movies, _b, movie;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    films = db.collection("Films");
-                    _b = utils_1.formatCollection;
-                    return [4 /*yield*/, films.get()];
-                case 1:
-                    movies = _b.apply(void 0, [_c.sent()]);
-                    movie = movies.find(function (_a) {
-                        var mId = _a.id;
-                        return id === mId;
-                    });
-                    return [2 /*return*/, movie ?
-                            res.status(200).json({ movie: movie }) :
-                            res.status(404).json({
-                                error: '404',
-                                message: "Not found movie with id: ".concat(id)
-                            })];
-            }
-        });
-    });
-});
-// router.post('/', async ({body: {title, description}}, res) => {
-//     const resp = formatCollection(await db.collection("Films").get());
-//     const max = Math.max(...resp.map(({id}) => Number(id)) as number[]) + 1;
-//     const docRef = db.collection('Films').doc(String(max));
-//     await docRef.set({
-//         title: title,
-//         description: description
-//     })
-//     res.json({message: 'film aggiunto'});
-// })
 exports.default = router;

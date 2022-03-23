@@ -1,13 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { getFirestore } from "firebase-admin/firestore";
 import jwt from "jsonwebtoken";
-import { User, UserSignup } from "../../models/user.model";
-import { formatCollection } from '../../utils';
+import { getFirestore } from "firebase-admin/firestore";
 
+import { formatCollection } from '../../utils';
+import { User } from "../../models/user.model";
+
+const db = getFirestore();
 
 export const auth = (async ({headers: {token}}: Request, res: Response, next: NextFunction) => {
     try{
-        res.locals.token =  jwt.verify((token! as string).split(' ')[1], 'shhhhh'); 
+        res.locals.token =  jwt.verify((token! as string).split(' ')[1], 'shhhhh');
+        const users = formatCollection(await db.collection("Users").get()) as User[];
+        const {username} = res.locals.token;
+        const user =users.find((user) => user.username === username);
+        res.locals.user=user;
         next();
     } catch(e){
         res.status(401).json({error: 401, message: "not authorized"})

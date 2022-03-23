@@ -1,10 +1,10 @@
 import { User, UserSignin } from "../../models/user.model";
 import { Request, Response } from "express";
-import { getFirestore } from "firebase-admin/firestore";
 import { formatCollection } from '../../utils';
 import * as bcrypt from "bcrypt";
+import db from "../../connection/connection";
 
-const db = getFirestore();
+
 
 export const checkData = (async ({ body: { username, password } }: Request<any, any, UserSignin>, res: Response, next: any) => {
     const users = formatCollection(await db.collection("Users").get()) as User[]

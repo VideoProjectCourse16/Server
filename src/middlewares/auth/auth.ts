@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { getFirestore } from "firebase-admin/firestore";
-
 import { formatCollection } from '../../utils';
 import { User } from "../../models/user.model";
+import db from "../../connection/connection";
 
-const db = getFirestore();
+
 
 export const auth = (async ({headers: {token}}: Request, res: Response, next: NextFunction) => {
     try{

@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { getFirestore } from "firebase-admin/firestore";
+import db from "../../connection/connection";
 import { User } from "../../models/user.model";
 import { formatCollection } from '../../utils';
 
-const db = getFirestore();
 
 export const userInfo = (async (_: Request, res: Response, next: any) => {
     const users = formatCollection(await db.collection("Users").get()) as User[]

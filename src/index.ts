@@ -1,6 +1,5 @@
 import express from "express";
-var cors = require('cors') /*SERVE PER COLLEGARE NODE AD ANGULAR ed a firebase*/
-import { ok } from "assert";
+const cors = require('cors') 
 import movies from "./routes/movies";
 import auth from "./routes/auth";
 import users from "./routes/users";
@@ -10,7 +9,7 @@ const app = express();
 const port=3000;
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
-app.use(cors()) //si utilizza così
+app.use(cors());
 
 
 app.use('/movies', movies)

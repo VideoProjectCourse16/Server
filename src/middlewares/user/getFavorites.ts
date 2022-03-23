@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { getFirestore } from "firebase-admin/firestore";
+import db from "../../connection/connection";
 import { Favorite } from "../../models/favorites.model";
 import { UserSignup } from "../../models/user.model";
 import { formatCollection } from '../../utils';
 
-const db = getFirestore();
 
 export const getFavorites = (async (_: Request, res: Response, next: any) => {
     let { username } = res.locals.user;

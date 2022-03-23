@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import { getFirestore } from "firebase-admin/firestore";
+import db from "../../connection/connection";
 import { Favorite } from "../../models/favorites.model";
 import { User, UserSignup } from "../../models/user.model";
 import { formatCollection } from '../../utils';
 
-const db = getFirestore();
 
 export const addFavorite = (async ({ body: { movieId } }: Request, res: Response, next: any) => {
     let { username } = res.locals.token;

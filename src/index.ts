@@ -25,6 +25,7 @@ app.get(`/`, auth, (_, res) => {
 
 // puoi provare a fare una cosa, è drastica ma per iniziare bisogna farlo
 // rimuovi tutti gli endpoint e le route, ne lasci solo una quì per vedere se funziona
+// perfetto, fai un push
 
 app.listen(port ,()=>console.log(`Project Work Server Is Running, port: ${port}`));
 // mandato su telegram

@@ -35,11 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addFavorite = void 0;
-var firestore_1 = require("firebase-admin/firestore");
+var connection_1 = __importDefault(require("../../connection/connection"));
 var utils_1 = require("../../utils");
-var db = (0, firestore_1.getFirestore)();
 exports.addFavorite = (function (_a, res, next) {
     var movieId = _a.body.movieId;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -48,16 +50,16 @@ exports.addFavorite = (function (_a, res, next) {
             switch (_d.label) {
                 case 0:
                     username = res.locals.token.username;
-                    films = db.collection("Films");
+                    films = connection_1.default.collection("Films");
                     _b = utils_1.formatCollection;
                     return [4 /*yield*/, films.get()];
                 case 1:
                     movies = _b.apply(void 0, [_d.sent()]);
                     _c = utils_1.formatCollection;
-                    return [4 /*yield*/, db.collection("Favorites").get()];
+                    return [4 /*yield*/, connection_1.default.collection("Favorites").get()];
                 case 2:
                     favorites = _c.apply(void 0, [_d.sent()]);
-                    if (!movies.some(function (movie) { return movie.id === movieId; })) return [3 /*break*/, 6];
+                    if (!movies.some(function (movie) { return movie.id === String(movieId); })) return [3 /*break*/, 6];
                     if (!favorites.some(function (favorite) { return favorite.username === username && favorite.movieId === movieId; })) return [3 /*break*/, 3];
                     return [2 /*return*/, res.status(401).json({ message: "Movie ".concat(movieId, " is already in the ").concat(username, "'s favorites") })];
                 case 3:
@@ -66,7 +68,7 @@ exports.addFavorite = (function (_a, res, next) {
                         return Number(id);
                     })) + 1;
                     max = max < 1 ? 1 : max;
-                    docRef = db.collection('Favorites').doc(String(max));
+                    docRef = connection_1.default.collection('Favorites').doc(String(max));
                     return [4 /*yield*/, docRef.set({
                             username: username,
                             movieId: movieId

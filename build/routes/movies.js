@@ -40,13 +40,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var firestore_1 = require("firebase-admin/firestore");
-var app_1 = require("firebase-admin/app");
 var utils_1 = require("../utils");
-var serviceAccount = require('../../config.json'); //for config firebase project_id 
+var connection_1 = __importDefault(require("../connection/connection"));
 var router = express_1.default.Router();
-(0, app_1.initializeApp)({ credential: (0, app_1.cert)(serviceAccount) }); //for use it
-var db = (0, firestore_1.getFirestore)();
 router.get('/', function (_a, res) {
     var _b = _a.query, title = _b.title, genre = _b.genre;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -54,18 +50,18 @@ router.get('/', function (_a, res) {
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
-                    films = db.collection("Films");
+                    films = connection_1.default.collection("Films");
                     _c = utils_1.formatCollection;
                     return [4 /*yield*/, films.get()];
                 case 1:
                     movies = _c.apply(void 0, [_d.sent()]);
                     title && (movies = movies.filter(function (_a) {
                         var mTitle = _a.title;
-                        return mTitle.includes(title);
+                        return mTitle.toLocaleLowerCase().includes(title.toLocaleLowerCase());
                     }));
                     genre && (movies = movies.filter(function (_a) {
                         var mGenre = _a.genre;
-                        return mGenre.includes(genre);
+                        return mGenre.toLocaleLowerCase().includes(genre.toLocaleLowerCase());
                     }));
                     res.json(movies);
                     return [2 /*return*/];
@@ -80,7 +76,7 @@ router.get('/:id', function (_a, res) {
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    films = db.collection("Films");
+                    films = connection_1.default.collection("Films");
                     _b = utils_1.formatCollection;
                     return [4 /*yield*/, films.get()];
                 case 1:

@@ -35,11 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getFavorites = void 0;
-var firestore_1 = require("firebase-admin/firestore");
+var connection_1 = __importDefault(require("../../connection/connection"));
 var utils_1 = require("../../utils");
-var db = (0, firestore_1.getFirestore)();
 exports.getFavorites = (function (_, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var username, favorites, _a, userFavorites;
     return __generator(this, function (_b) {
@@ -47,11 +49,17 @@ exports.getFavorites = (function (_, res, next) { return __awaiter(void 0, void 
             case 0:
                 username = res.locals.user.username;
                 _a = utils_1.formatCollection;
-                return [4 /*yield*/, db.collection("Favorites").get()];
+                return [4 /*yield*/, connection_1.default.collection("Favorites").get()];
             case 1:
                 favorites = _a.apply(void 0, [_b.sent()]);
-                if (favorites.some(function (favorite) { return favorite.username === username; })) {
-                    userFavorites = favorites.filter(function (favorite) { return favorite.username === username; });
+                if (favorites.some(function (_a) {
+                    var favOfUsername = _a.username;
+                    return favOfUsername === username;
+                })) {
+                    userFavorites = favorites.filter(function (_a) {
+                        var favOfUsername = _a.username;
+                        return favOfUsername === username;
+                    });
                     res.locals.username = username;
                     res.locals.userFavorites = userFavorites;
                     next();

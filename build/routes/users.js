@@ -40,14 +40,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
-var firestore_1 = require("firebase-admin/firestore");
 var userInfo_1 = require("../middlewares/auth/userInfo");
 var addFavorites_1 = require("../middlewares/user/addFavorites");
 var getFavorites_1 = require("../middlewares/user/getFavorites");
 var auth_1 = require("../middlewares/auth/auth");
 var utils_1 = require("../utils");
+var connection_1 = __importDefault(require("../connection/connection"));
 var router = express_1.default.Router();
-var db = (0, firestore_1.getFirestore)();
 router.post("/favorites", auth_1.auth, userInfo_1.userInfo, addFavorites_1.addFavorite, function (_, res) {
     var favorite = {
         //username: res.locals.username,
@@ -61,6 +60,46 @@ router.get("/favorites", auth_1.auth, userInfo_1.userInfo, getFavorites_1.getFav
     return res.status(200).json({ message: "".concat(res.locals.username, " favorites movies:"),
         favorites: res.locals.userFavorites });
 });
+router.delete("/:id/favorites/:movieId", auth_1.auth, function (_a, res) {
+    var _b = _a.params, id = _b.id, movieId = _b.movieId;
+    return __awaiter(void 0, void 0, void 0, function () {
+        var users, _c, index, favorites, _d, indFav;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    _c = utils_1.formatCollection;
+                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
+                case 1:
+                    users = _c.apply(void 0, [_e.sent()]);
+                    index = users.findIndex(function (_a) {
+                        var uId = _a.id;
+                        return uId === id;
+                    });
+                    if (!(index > -1)) return [3 /*break*/, 3];
+                    _d = utils_1.formatCollection;
+                    return [4 /*yield*/, connection_1.default.collection("Favorites").get()];
+                case 2:
+                    favorites = _d.apply(void 0, [_e.sent()]);
+                    indFav = favorites.findIndex(function (_a) {
+                        var favMovieId = _a.movieId;
+                        return favMovieId === movieId;
+                    });
+                    if (indFav > -1) {
+                        connection_1.default.collection('Favorites').doc(favorites[indFav].id).delete();
+                        res.json({ message: "favorite film ".concat(favorites[indFav].movieId, " removed") });
+                    }
+                    else {
+                        res.status(404).json({ error: "404", message: "favorite movie not found" });
+                    }
+                    return [3 /*break*/, 4];
+                case 3:
+                    res.status(404).json({ error: "404", message: "User not found" });
+                    _e.label = 4;
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+});
 router.delete('/:id', function (_a, res) {
     var id = _a.params.id;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -69,7 +108,7 @@ router.delete('/:id', function (_a, res) {
             switch (_c.label) {
                 case 0:
                     _b = utils_1.formatCollection;
-                    return [4 /*yield*/, db.collection("Users").get()];
+                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
                 case 1:
                     users = _b.apply(void 0, [_c.sent()]);
                     index = users.findIndex(function (_a) {
@@ -77,7 +116,7 @@ router.delete('/:id', function (_a, res) {
                         return uid === id;
                     });
                     if (index > -1) {
-                        db.collection('Users').doc(id).delete();
+                        connection_1.default.collection('Users').doc(id).delete();
                         res.json({ message: "user removed" });
                     }
                     else {

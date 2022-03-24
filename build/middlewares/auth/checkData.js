@@ -58,12 +58,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkData = void 0;
-var firestore_1 = require("firebase-admin/firestore");
 var utils_1 = require("../../utils");
 var bcrypt = __importStar(require("bcrypt"));
-var db = (0, firestore_1.getFirestore)();
+var connection_1 = __importDefault(require("../../connection/connection"));
 exports.checkData = (function (_a, res, next) {
     var _b = _a.body, username = _b.username, password = _b.password;
     return __awaiter(void 0, void 0, void 0, function () {
@@ -72,7 +74,7 @@ exports.checkData = (function (_a, res, next) {
             switch (_d.label) {
                 case 0:
                     _c = utils_1.formatCollection;
-                    return [4 /*yield*/, db.collection("Users").get()];
+                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
                 case 1:
                     users = _c.apply(void 0, [_d.sent()]);
                     user = users.find(function (user) { return user.username === username; });

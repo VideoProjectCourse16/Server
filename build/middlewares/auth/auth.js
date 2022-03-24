@@ -41,18 +41,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var utils_1 = require("../../utils");
+var connection_1 = __importDefault(require("../../connection/connection"));
 exports.auth = (function (_a, res, next) {
     var token = _a.headers.token;
     return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_b) {
-            try {
-                res.locals.token = jsonwebtoken_1.default.verify(token.split(' ')[1], 'shhhhh');
-                next();
+        var users, _b, username_1, user, e_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 2, , 3]);
+                    res.locals.token = jsonwebtoken_1.default.verify(token.split(' ')[1], 'shhhhh');
+                    _b = utils_1.formatCollection;
+                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
+                case 1:
+                    users = _b.apply(void 0, [_c.sent()]);
+                    username_1 = res.locals.token.username;
+                    user = users.find(function (user) { return user.username === username_1; });
+                    res.locals.user = user;
+                    next();
+                    return [3 /*break*/, 3];
+                case 2:
+                    e_1 = _c.sent();
+                    res.status(401).json({ error: 401, message: "not authorized" });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
             }
-            catch (e) {
-                res.status(401).json({ error: 401, message: "not authorized" });
-            }
-            return [2 /*return*/];
         });
     });
 });

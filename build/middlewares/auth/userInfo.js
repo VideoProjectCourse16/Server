@@ -35,18 +35,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userInfo = void 0;
-var firestore_1 = require("firebase-admin/firestore");
+var connection_1 = __importDefault(require("../../connection/connection"));
 var utils_1 = require("../../utils");
-var db = (0, firestore_1.getFirestore)();
 exports.userInfo = (function (_, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var users, _a, username, user;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _a = utils_1.formatCollection;
-                return [4 /*yield*/, db.collection("Users").get()];
+                return [4 /*yield*/, connection_1.default.collection("Users").get()];
             case 1:
                 users = _a.apply(void 0, [_b.sent()]);
                 username = res.locals.token.username;

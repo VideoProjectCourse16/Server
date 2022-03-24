@@ -55,20 +55,18 @@ var encryption_1 = require("../middlewares/auth/encryption");
 var auth_1 = require("../middlewares/auth/auth");
 var checkData_1 = require("../middlewares/auth/checkData");
 var utils_1 = require("../utils");
-var firestore_1 = require("firebase-admin/firestore");
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+var connection_1 = __importDefault(require("../connection/connection"));
 var router = express_1.default.Router();
-var db = (0, firestore_1.getFirestore)();
 router.post("/signup", encryption_1.passwordEncryption, function (_, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, name, surname, username, password, users, _b, max, docRef;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
-                res.locals.username;
                 _a = res.locals.user, name = _a.name, surname = _a.surname, username = _a.username;
                 password = res.locals.hashedPassword;
                 _b = utils_1.formatCollection;
-                return [4 /*yield*/, db.collection("Users").get()];
+                return [4 /*yield*/, connection_1.default.collection("Users").get()];
             case 1:
                 users = _b.apply(void 0, [_c.sent()]);
                 if (!users.some(function (_a) {
@@ -81,7 +79,8 @@ router.post("/signup", encryption_1.passwordEncryption, function (_, res) { retu
                     var id = _a.id;
                     return Number(id);
                 })) + 1;
-                docRef = db.collection('Users').doc(String(max));
+                max = max < 1 ? 1 : max;
+                docRef = connection_1.default.collection('Users').doc(String(max));
                 return [4 /*yield*/, docRef.set({
                         name: name,
                         surname: surname,
@@ -90,8 +89,6 @@ router.post("/signup", encryption_1.passwordEncryption, function (_, res) { retu
                     })];
             case 3:
                 _c.sent();
-                res.locals.username = username;
-                res.locals.user = { name: name, surname: surname, username: username };
                 _c.label = 4;
             case 4:
                 res.status(200).json({
@@ -111,7 +108,11 @@ router.post("/signin", checkData_1.checkData, function (_a, res) {
     });
 });
 router.get("/me", auth_1.auth, function (_, res) {
-    var user = res.locals.token;
-    return res.status(200).json({ message: "".concat(user.username, " Infos"), user: __assign({}, user) });
+    var _a = res.locals.token, username = _a.username, iat = _a.iat;
+    var _b = res.locals.user, name = _b.name, surname = _b.surname, id = _b.id;
+    var user = { username: username, id: id, name: name, surname: surname, iat: iat };
+    return res.status(200).json({
+        message: "".concat(user.username, " Infos"), user: __assign({}, user),
+    });
 });
 exports.default = router;

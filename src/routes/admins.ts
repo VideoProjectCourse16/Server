@@ -28,14 +28,12 @@ router.post(`/films`, async ({ body: movie }: Request<{}, {}, Movie>, res) => {
 router.delete(`/films/:movieId`, async ({ params: { movieId } }: Request<{ movieId: string }, {}, {}, {}>, res) => {
     const movies = formatCollection<Movie>(await db.collection("Films").get());
     const index = movies.findIndex(({ id }) => id === movieId);
-    const favoriteMovies = formatCollection<Favorite>(await db.collection("Favorites").get());
-    const indexFavorite = favoriteMovies.findIndex(({ movieId:id }) => id === Number(movieId));
     if (index > -1) {
-        //questo non se lo prende
+        const favorites = formatCollection<Favorite>(await db.collection("Favorites").get());
+        const indexFavorite = favorites.findIndex(({ movieId: favMovieId }) => String(favMovieId) === movieId);
         if(indexFavorite > -1){
-            db.collection('Favorites').doc(favoriteMovies[index].id).delete();
+            db.collection('Favorites').doc(favorites[indexFavorite].id).delete();
         }
-        //
         db.collection('Films').doc(movies[index].id).delete();
         return res.status(200).json({ message: `Movie with ID: ${movies[index].id} removed` })
     }

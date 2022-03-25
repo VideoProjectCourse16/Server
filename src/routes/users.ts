@@ -1,4 +1,4 @@
-import express, {Request} from "express";
+import express, { Request } from "express";
 import { userInfo } from "../middlewares/auth/userInfo";
 import { addFavorite } from "../middlewares/user/addFavorites";
 import { getFavorites } from "../middlewares/user/getFavorites";
@@ -7,50 +7,75 @@ import { Favorite } from "../models/favorites.model";
 import { User } from "../models/user.model";
 import { formatCollection } from "../utils";
 import db from "../connection/connection";
+import { Movie } from "../models/movies.model";
 
 const router = express.Router();
 
-router.post(`/favorites`,auth,userInfo,addFavorite,(_,res)=>{
-    let favorite:Partial<Favorite> = {
+router.post(`/favorites`, auth, userInfo, addFavorite, (_, res) => {
+    let favorite: Partial<Favorite> = {
         //username: res.locals.username,
-        movieId:res.locals.movieId
+        movieId: res.locals.movieId
     }
-    const {username}: Favorite = res.locals.token
-    return res.status(200).json({ message: `${username} added to favorites movie with id:${favorite.movieId}`,
-    favorite: favorite})
+    const { username }: Favorite = res.locals.token
+    return res.status(200).json({
+        message: `${username} added to favorites movie with id:${favorite.movieId}`,
+        favorite: favorite
+    })
 })
-router.get(`/favorites`,auth,userInfo,getFavorites,(_,res)=>{
-
-    return res.status(200).json({ message: `${res.locals.username} favorites movies:`,
-    favorites:res.locals.userFavorites })
+router.get(`/favorites`, auth, userInfo, getFavorites, (_, res) => {
+    return res.status(200).json({
+        message: `${res.locals.username} favorites movies:`,
+        favorites: res.locals.userFavorites
+    })
 })
 
-router.delete(`/:id/favorites/:movieId`, auth, async({params: {id, movieId}}: Request<Partial<Favorite & {id:string}>, {}, {}, {}> , res)=>{
+router.delete(`/:id/favorites/:movieId`, auth, async ({ params: { id, movieId } }: Request<Partial<Favorite & { id: string }>, {}, {}, {}>, res) => {
     const users = formatCollection<User>(await db.collection("Users").get());
-    const index = users.findIndex(({id: uId})=>uId===id);
-    if(index>-1) {
+    const index = users.findIndex(({ id: uId }) => uId === id);
+    if (index > -1) {
         const favorites = formatCollection<Favorite>(await db.collection("Favorites").get());
-        const indFav = favorites.findIndex(({movieId: favMovieId})=>favMovieId===movieId);
-        if(indFav>-1){
+        const indFav = favorites.findIndex(({ movieId: favMovieId }) => favMovieId === movieId);
+        if (indFav > -1) {
             db.collection('Favorites').doc(favorites[indFav].id).delete();
-            res.json({message: `favorite film ${favorites[indFav].movieId} removed`})
-        }else {
-            res.status(404).json({error: "404", message: "favorite movie not found"})
+            res.json({ message: `favorite film ${favorites[indFav].movieId} removed` })
+        } else {
+            res.status(404).json({ error: "404", message: "favorite movie not found" })
         }
-    }else {
-        res.status(404).json({error: "404", message: "User not found"})
+    } else {
+        res.status(404).json({ error: "404", message: "User not found" })
     }
 })
 
-router.delete('/:id', async({params: {id}}, res)=>{
+router.delete('/:id', async ({ params: { id } }, res) => {
     const users = formatCollection<User>(await db.collection("Users").get());
-    const index = users.findIndex(({id: uid})=>uid===id);
-    if(index>-1) {
+    const index = users.findIndex(({ id: uid }) => uid === id);
+    if (index > -1) {
         db.collection('Users').doc(id).delete();
-        res.json({message: "user removed"}) 
+        res.json({ message: "user removed" })
     } else {
-        res.status(404).json({error: "404", message: "User not found"})
+        res.status(404).json({ error: "404", message: "User not found" })
     }
+})
+
+//admin
+router.post(`/films`, async ({ body: movie }: Request<{}, {}, Movie>, res) => {
+    const movies = formatCollection<Movie>(await db.collection("Films").get());
+    const hasSameType=  JSON.stringify(Object.keys(movie).sort()) === JSON.stringify(Object.keys(movies[0]).sort());
+    const isIdPresent = movies.some(({ id }) => id === movie.id);
+    if(hasSameType){
+        if (isIdPresent) {
+            res.status(400).json({ error: 400, message: `Operation blocked, ID: ${movie.id} is already present` })
+        } else {
+            const docRef = db.collection('Films').doc(String(movie.id));
+            await docRef.set({
+                movie
+            })
+            res.status(200).json({ message: `Movie inserted correctly!`, movie: movie });
+        }
+    }else{
+        res.status(400).json({ error: 400, message: `Operation blocked, Please fill in all the required fields` })
+    }
+    
 })
 
 export default router;

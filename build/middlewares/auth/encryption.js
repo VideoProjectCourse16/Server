@@ -62,7 +62,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.passwordEncryption = void 0;
 var bcrypt = __importStar(require("bcrypt"));
 exports.passwordEncryption = (function (_a, res, next) {
-    var _b = _a.body, name = _b.name, surname = _b.surname, username = _b.username, password = _b.password, repeatPassword = _b.repeatPassword;
+    var _b = _a.body, name = _b.name, surname = _b.surname, username = _b.username, password = _b.password, repeatPassword = _b.repeatPassword, admin = _b.admin;
     return __awaiter(void 0, void 0, void 0, function () {
         var hashedPassword, user;
         return __generator(this, function (_c) {
@@ -71,7 +71,8 @@ exports.passwordEncryption = (function (_a, res, next) {
                 surname: surname,
                 username: username,
                 password: password,
-                repeatPassword: repeatPassword
+                repeatPassword: repeatPassword,
+                admin: admin
             };
             if (username && password && repeatPassword) {
                 if (password === repeatPassword) {

@@ -15,7 +15,7 @@ router.post(`/signup`, passwordEncryption, async (_, res) => {
     let password: string = res.locals.hashedPassword
     const users = formatCollection<User>(await db.collection("Users").get());
     if (users.some(({ username }) => username === res.locals.username)) {
-        return res.status(401).json({ message: `Username ${username} already exists` });
+        return res.status(422).json({ message: `Username ${username} already exists` });
     } else {
         let max = Math.max(...users.map(({ id }) => Number(id)) as number[]) + 1;
         max = max < 1 ? 1 : max
@@ -24,7 +24,8 @@ router.post(`/signup`, passwordEncryption, async (_, res) => {
             name,
             surname,
             username,
-            password
+            password,
+            admin: false
         })
     }
     res.status(200).json(

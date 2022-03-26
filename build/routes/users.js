@@ -53,12 +53,16 @@ router.post("/favorites", auth_1.auth, userInfo_1.userInfo, addFavorites_1.addFa
         movieId: res.locals.movieId
     };
     var username = res.locals.token.username;
-    return res.status(200).json({ message: "".concat(username, " added to favorites movie with id:").concat(favorite.movieId),
-        favorite: favorite });
+    return res.status(200).json({
+        message: "".concat(username, " added to favorites movie with id:").concat(favorite.movieId),
+        favorite: favorite
+    });
 });
 router.get("/favorites", auth_1.auth, userInfo_1.userInfo, getFavorites_1.getFavorites, function (_, res) {
-    return res.status(200).json({ message: "".concat(res.locals.username, " favorites movies:"),
-        favorites: res.locals.userFavorites });
+    return res.status(200).json({
+        message: "".concat(res.locals.username, " favorites movies:"),
+        favorites: res.locals.userFavorites
+    });
 });
 router.delete("/:id/favorites/:movieId", auth_1.auth, function (_a, res) {
     var _b = _a.params, id = _b.id, movieId = _b.movieId;

@@ -3,10 +3,10 @@ import { Request, Response } from "express";
 import * as bcrypt from "bcrypt";
 
 
-export const passwordEncryption = (async ({ body: {name,surname, username, password, repeatPassword } }: Request<any, any, UserSignup>, res: Response, next: any) => {
+export const passwordEncryption = (async ({ body: {name,surname, username, password, repeatPassword, admin } }: Request<any, any, UserSignup>, res: Response, next: any) => {
     var hashedPassword: string;
     var user: UserSignup={
-        name,surname,username,password,repeatPassword
+        name,surname,username,password,repeatPassword, admin
     }
     if (username! && password! && repeatPassword!) {
         if (password! === repeatPassword!) {

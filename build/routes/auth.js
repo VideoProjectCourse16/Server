@@ -73,7 +73,7 @@ router.post("/signup", encryption_1.passwordEncryption, function (_, res) { retu
                     var username = _a.username;
                     return username === res.locals.username;
                 })) return [3 /*break*/, 2];
-                return [2 /*return*/, res.status(401).json({ message: "Username ".concat(username, " already exists") })];
+                return [2 /*return*/, res.status(422).json({ message: "Username ".concat(username, " already exists") })];
             case 2:
                 max = Math.max.apply(Math, users.map(function (_a) {
                     var id = _a.id;
@@ -85,7 +85,8 @@ router.post("/signup", encryption_1.passwordEncryption, function (_, res) { retu
                         name: name,
                         surname: surname,
                         username: username,
-                        password: password
+                        password: password,
+                        admin: false
                     })];
             case 3:
                 _c.sent();

@@ -45,7 +45,7 @@ router.delete(`/:id/favorites/:movieId`, auth, async ({ params: { id, movieId } 
     }
 })
 
-router.delete('/:id', async ({ params: { id } }, res) => {
+/*router.delete('/:id', async ({ params: { id } }, res) => {
     const users = formatCollection<User>(await db.collection("Users").get());
     const index = users.findIndex(({ id: uid }) => uid === id);
     if (index > -1) {
@@ -54,7 +54,7 @@ router.delete('/:id', async ({ params: { id } }, res) => {
     } else {
         res.status(404).json({ error: "404", message: "User not found" })
     }
-})
+})*/
 
 export default router;
 

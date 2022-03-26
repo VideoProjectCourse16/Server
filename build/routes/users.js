@@ -104,31 +104,14 @@ router.delete("/:id/favorites/:movieId", auth_1.auth, function (_a, res) {
         });
     });
 });
-router.delete('/:id', function (_a, res) {
-    var id = _a.params.id;
-    return __awaiter(void 0, void 0, void 0, function () {
-        var users, _b, index;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    _b = utils_1.formatCollection;
-                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
-                case 1:
-                    users = _b.apply(void 0, [_c.sent()]);
-                    index = users.findIndex(function (_a) {
-                        var uid = _a.id;
-                        return uid === id;
-                    });
-                    if (index > -1) {
-                        connection_1.default.collection('Users').doc(id).delete();
-                        res.json({ message: "user removed" });
-                    }
-                    else {
-                        res.status(404).json({ error: "404", message: "User not found" });
-                    }
-                    return [2 /*return*/];
-            }
-        });
-    });
-});
+/*router.delete('/:id', async ({ params: { id } }, res) => {
+    const users = formatCollection<User>(await db.collection("Users").get());
+    const index = users.findIndex(({ id: uid }) => uid === id);
+    if (index > -1) {
+        db.collection('Users').doc(id).delete();
+        res.json({ message: "user removed" })
+    } else {
+        res.status(404).json({ error: "404", message: "User not found" })
+    }
+})*/
 exports.default = router;

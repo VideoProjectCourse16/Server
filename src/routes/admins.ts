@@ -25,7 +25,7 @@ router.post(`/:username/movies`, auth, async ({ body: movie, params: {username} 
             res.status(400).json({ error: 400, message: `Operation blocked, Please fill in all the required fields` })
         }
     }else {
-        res.status(403).json({error: "403", message: "user nor authorized"})
+        res.status(401).json({error: "401", message: "user nor authorized"})
     }
 
 })
@@ -47,7 +47,7 @@ router.delete(`/:username/movies/:movieId`, auth ,async ({ params: { movieId, us
         }
             return res.json({ error: "404", message: `Movie with ID: ${movieId} not found` })
     }else {
-        res.status(403).json({error: "403", message: "user nor authorized"});
+        res.status(401).json({error: "401", message: "user nor authorized"});
     }
 })
 
@@ -63,7 +63,7 @@ router.put('/:username/user/:username1', auth, async({params: {username, usernam
             res.status(404).json({error: "404", message: "user not found"});
         }
     } else {
-        res.status(403).json({error: "403", message: "user nor authorized"});
+        res.status(401).json({error: "401", message: "user nor authorized"});
     }
 })
 

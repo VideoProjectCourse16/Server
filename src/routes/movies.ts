@@ -18,7 +18,7 @@ router.get('/:id', async ({ params: { id }}: Request<Movie, {}, {}, {}>, res) =>
     let movies = formatCollection<Movie>(await films.get());
     let movie = movies.find(({id: mId}) => id === mId)
     return movie ?
-        res.status(200).json({ movie: movie }) :
+        res.status(200).json({movie: movie} ) :
         res.status(404).json({
             error: '404',
             message: `Not found movie with id: ${id}`

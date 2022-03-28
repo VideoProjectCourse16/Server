@@ -54,130 +54,86 @@ var connection_1 = __importDefault(require("../connection/connection"));
 var auth_1 = require("../middlewares/auth/auth");
 var utils_1 = require("../utils");
 var movies_1 = __importDefault(require("./movies"));
-movies_1.default.post("/:username/movies", auth_1.auth, function (_a, res) {
-    var movie = _a.body, username = _a.params.username;
+var asAdmin_1 = require("../middlewares/auth/asAdmin");
+movies_1.default.post("/movies", auth_1.auth, asAdmin_1.asAdmin, function (_a, res) {
+    var movie = _a.body;
     return __awaiter(void 0, void 0, void 0, function () {
-        var movies, _b, users, _c, index, max, newMovie, hasSameType, docRef;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var movies, _b, max, newMovie, hasSameType, docRef;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
                     _b = utils_1.formatCollection;
                     return [4 /*yield*/, connection_1.default.collection("Films").get()];
                 case 1:
-                    movies = _b.apply(void 0, [_d.sent()]);
-                    _c = utils_1.formatCollection;
-                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
-                case 2:
-                    users = _c.apply(void 0, [_d.sent()]);
-                    index = users.findIndex(function (_a) {
-                        var uUsername = _a.username, admin = _a.admin;
-                        return (admin == true && uUsername === username);
-                    });
-                    if (!(index > -1)) return [3 /*break*/, 6];
+                    movies = _b.apply(void 0, [_c.sent()]);
                     max = Math.max.apply(Math, movies.map(function (_a) {
                         var id = _a.id;
                         return Number(id);
                     })) + 1;
                     newMovie = __assign(__assign({}, movie), { id: max });
                     hasSameType = JSON.stringify(Object.keys(newMovie).sort()) === JSON.stringify(Object.keys(movies[0]).sort());
-                    if (!hasSameType) return [3 /*break*/, 4];
+                    if (!hasSameType) return [3 /*break*/, 3];
                     docRef = connection_1.default.collection('Films').doc(String(max));
                     return [4 /*yield*/, docRef.set({
                             movie: movie
                         })];
-                case 3:
-                    _d.sent();
+                case 2:
+                    _c.sent();
                     res.status(200).json({ message: "Movie inserted correctly!", movie: movie });
-                    return [3 /*break*/, 5];
-                case 4:
+                    return [3 /*break*/, 4];
+                case 3:
                     res.status(400).json({ error: 400, message: "Operation blocked, Please fill in all the required fields" });
-                    _d.label = 5;
-                case 5: return [3 /*break*/, 7];
-                case 6:
-                    res.status(403).json({ error: "403", message: "user nor authorized" });
-                    _d.label = 7;
-                case 7: return [2 /*return*/];
+                    _c.label = 4;
+                case 4: return [2 /*return*/];
             }
         });
     });
 });
-movies_1.default.delete("/:username/movies/:movieId", auth_1.auth, function (_a, res) {
-    var _b = _a.params, movieId = _b.movieId, username = _b.username;
+movies_1.default.delete("/movies/:id", auth_1.auth, asAdmin_1.asAdmin, function (_a, res) {
+    var id = _a.params.id;
     return __awaiter(void 0, void 0, void 0, function () {
-        var movies, _c, users, _d, userIndex, index, favorites, _e, indexFavorite;
-        return __generator(this, function (_f) {
-            switch (_f.label) {
+        var movies, _b, index;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _c = utils_1.formatCollection;
+                    _b = utils_1.formatCollection;
                     return [4 /*yield*/, connection_1.default.collection("Films").get()];
                 case 1:
-                    movies = _c.apply(void 0, [_f.sent()]);
-                    _d = utils_1.formatCollection;
-                    return [4 /*yield*/, connection_1.default.collection("Users").get()];
-                case 2:
-                    users = _d.apply(void 0, [_f.sent()]);
-                    userIndex = users.findIndex(function (_a) {
-                        var uUsername = _a.username, admin = _a.admin;
-                        return (admin == true && uUsername === username);
-                    });
-                    if (!(userIndex > -1)) return [3 /*break*/, 5];
+                    movies = _b.apply(void 0, [_c.sent()]);
                     index = movies.findIndex(function (_a) {
-                        var id = _a.id;
+                        var movieId = _a.id;
                         return id === movieId;
                     });
-                    if (!(index > -1)) return [3 /*break*/, 4];
-                    _e = utils_1.formatCollection;
-                    return [4 /*yield*/, connection_1.default.collection("Favorites").get()];
-                case 3:
-                    favorites = _e.apply(void 0, [_f.sent()]);
-                    indexFavorite = favorites.findIndex(function (_a) {
-                        var favMovieId = _a.movieId;
-                        return String(favMovieId) === movieId;
-                    });
-                    if (indexFavorite > -1) {
-                        connection_1.default.collection('Favorites').doc(favorites[indexFavorite].id).delete();
+                    if (index > -1) {
+                        connection_1.default.collection('Films').doc(movies[index].id).delete();
+                        return [2 /*return*/, res.status(200).json({ message: "Movie with ID: ".concat(movies[index].id, " removed") })];
                     }
-                    connection_1.default.collection('Films').doc(movies[index].id).delete();
-                    return [2 /*return*/, res.status(200).json({ message: "Movie with ID: ".concat(movies[index].id, " removed") })];
-                case 4: return [2 /*return*/, res.json({ error: "404", message: "Movie with ID: ".concat(movieId, " not found") })];
-                case 5:
-                    res.status(403).json({ error: "403", message: "user nor authorized" });
-                    _f.label = 6;
-                case 6: return [2 /*return*/];
+                    return [2 /*return*/, res.json({ error: "404", message: "Movie with ID: ".concat(id, " not found") })];
             }
         });
     });
 });
-movies_1.default.put('/:username/user/:username1', auth_1.auth, function (_a, res) {
-    var _b = _a.params, username = _b.username, username1 = _b.username1;
+movies_1.default.put('/user/:username1', auth_1.auth, asAdmin_1.asAdmin, function (_a, res) {
+    var username1 = _a.params.username1;
     return __awaiter(void 0, void 0, void 0, function () {
-        var users, _c, userIndex, user;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
+        var users, _b, user;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _c = utils_1.formatCollection;
+                    _b = utils_1.formatCollection;
                     return [4 /*yield*/, connection_1.default.collection("Users").get()];
                 case 1:
-                    users = _c.apply(void 0, [_d.sent()]);
-                    userIndex = users.findIndex(function (_a) {
-                        var uUsername = _a.username, admin = _a.admin;
-                        return (admin == true && uUsername === username);
+                    users = _b.apply(void 0, [_c.sent()]);
+                    user = users.find(function (_a) {
+                        var username = _a.username;
+                        return username === username1;
                     });
-                    if (userIndex > -1) {
-                        user = users.find(function (_a) {
-                            var username = _a.username;
-                            return username === username1;
-                        });
-                        if (user) {
-                            connection_1.default.collection("Users").doc(user.id).update({ admin: true });
-                            res.json({ message: "new admin setted" });
-                        }
-                        else {
-                            res.status(404).json({ error: "404", message: "user not found" });
-                        }
+                    if (user) {
+                        connection_1.default.collection("Users").doc(user.id).update({ admin: true });
+                        res.json({ message: "new admin setted" });
                     }
                     else {
-                        res.status(403).json({ error: "403", message: "user nor authorized" });
+                        res.status(404).json({ error: "404", message: "user not found" });
                     }
                     return [2 /*return*/];
             }

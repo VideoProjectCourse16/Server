@@ -1,0 +1,562 @@
+openapi: "3.0.2"
+info:
+  title: VideoProjectCourse16
+  version: "1.0"
+  contact:
+    email: mario.atria@stevejobs.academy
+servers:
+  - url: https://videoprojectcourse16.herokuapp.com
+tags:
+  - name: Auth
+    description: Auth stuffs
+  - name: Movies
+    description: Access to Movies
+  - name: Users
+    description: Operations about users
+  - name: Admins
+    description: Operations about Admins
+paths:
+  /movies:
+    get:
+      tags:
+        - Movies
+      summary: "Get All movies"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movies"
+  
+  /movies/{id}:
+    get:
+      tags:
+        - Movies
+      summary: "Get specific movie infos"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: ID of the movie to get
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movie"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  
+  /users/favorites:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      summary: "Get all favorites movies"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getFavorites"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+    post:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      summary: "add movie to favourites"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Movie"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Favorite"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+  
+  /users/{id}/favorites/{movieId}:
+    delete:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      summary: "Delete a movie from favourites with a specific Id"
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: User ID
+        - in: path
+          name: movieId
+          schema:
+            type: string
+          required: true
+          description: Movie ID
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+  /auth/signup:
+    post:
+      tags:
+        - Auth
+      summary: "signup on application"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignup"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedError"
+        "422":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: "signin on application"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserSignin"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResponseSignin"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+  /auth/me:
+    get:
+      tags:
+      - Auth
+      security:
+        - bearerAuth: []
+      summary: "Returns user information"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeInfos"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+  /admins/{username}/movies:
+    post:
+      tags:
+      - Admins
+      security:
+        - bearerAuth: []
+      summary: "Create a new movie"
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Username of the admin who will create the movie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Movie"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddedMovie"
+        "400":
+          description: Blocked operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+  /admins/{username}/movies/{movieId}:
+    delete:
+      tags:
+      - Admins
+      security:
+        - bearerAuth: []
+      summary: "Delete an existing movie"
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Username of the admin who will delete the movie
+        - in: path
+          name: movieId
+          schema:
+            type: string
+          required: true
+          description: MovieId of the movie who will delete the movie
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+  /admins/{username}/user/{username1}:
+    put:
+      tags:
+      - Admins
+      security:
+        - bearerAuth: []
+      summary: "Delete an existing movie"
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: Username of the admin who will delete the movie
+        - in: path
+          name: username1
+          schema:
+            type: string
+          required: true
+          description: Username of the user who will become admin
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+        "404":
+          description: Movie not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Errors"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    MeInfos:
+      type: object
+      properties:
+        username:
+          type: string
+        id:
+          type: number
+        name:
+          type: string
+        surname:
+          type: string
+        iat:
+          type: number
+    ResponseSignin:
+      type: object
+      properties:
+        message:
+          type: string
+        user:
+          type: object
+          properties:
+            username:
+              type: string
+            token:
+              type: string
+    UserSignin:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    UserSignup:
+      type: object
+      properties:
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        repeatPassword:
+          type: string
+        admin:
+          type: boolean
+    Movies:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+          title:
+            type: string
+          popularity:
+            type: number
+          genre:
+            type: string
+          original_language:
+            type: string
+          plot:
+            type: string
+          poster_path:
+            type: number
+          trailer:
+            type: string
+          backdrop_path:
+            type: string
+          release_date:
+            type: string
+          adult:
+            type: boolean
+          vote_average:
+            type: string
+    Errors:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+    Movie:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        popularity:
+          type: number
+        genre:
+          type: string
+        original_language:
+          type: string
+        plot:
+          type: string
+        poster_path:
+          type: number
+        trailer:
+          type: string
+        backdrop_path:
+          type: string
+        release_date:
+          type: string
+        adult:
+          type: boolean
+        vote_average:
+          type: string
+    UnauthorizedError:
+      type: object
+      properties:
+        message:
+          type: string
+    getFavorites:
+      type: object
+      properties:
+        message:
+          type: string
+        favorites:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title:
+                type: string
+              popularity:
+                type: number
+              genre:
+                type: string
+              original_language:
+                type: string
+              plot:
+                type: string
+              poster_path:
+                type: number
+              trailer:
+                type: string
+              backdrop_path:
+                type: string
+              release_date:
+                type: string
+              adult:
+                type: boolean
+              vote_average:
+                type: string
+    Favorite:
+      type: object
+      properties:
+        message:
+          type: string
+        favorite:
+          type: object
+          properties:
+            movieId:
+              type: string
+    AddedMovie:
+      type: object
+      properties:
+        message:
+          type: string
+        movie:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            popularity:
+              type: number
+            genre:
+              type: string
+            original_language:
+              type: string
+            plot:
+              type: string
+            poster_path:
+              type: number
+            trailer:
+              type: string
+            backdrop_path:
+              type: string
+            release_date:
+              type: string
+            adult:
+              type: boolean
+            vote_average:
+              type: string

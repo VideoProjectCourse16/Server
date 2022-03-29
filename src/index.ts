@@ -1,4 +1,8 @@
 import express from "express";
+
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+
 const cors = require('cors') 
 import movies from "./routes/movies";
 import auth from "./routes/auth";
@@ -8,10 +12,16 @@ import admins from "./routes/admins";
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+const swaggerDocument = YAML.load('./public/Documentation.yml');
+
+
+
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('/movies', movies);
 app.use('/auth', auth);

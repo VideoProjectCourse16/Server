@@ -42,8 +42,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.asAdmin = void 0;
 var utils_1 = require("../../utils");
 var connection_1 = __importDefault(require("../../connection/connection"));
-exports.asAdmin = (function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var users, _a, username, index;
+exports.asAdmin = (function (_, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var users, _a, username, exists;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -52,16 +52,11 @@ exports.asAdmin = (function (req, res, next) { return __awaiter(void 0, void 0, 
             case 1:
                 users = _a.apply(void 0, [_b.sent()]);
                 username = res.locals.user.username;
-                index = users.findIndex(function (_a) {
+                exists = users.some(function (_a) {
                     var uUsername = _a.username, admin = _a.admin;
-                    return (admin == true && uUsername === username);
+                    return (admin && uUsername === username);
                 });
-                if (index > -1) {
-                    next();
-                }
-                else {
-                    res.status(401).json({ message: "not authorized" });
-                }
+                exists ? next() : res.status(401).json({ message: "not authorized" });
                 return [2 /*return*/];
         }
     });

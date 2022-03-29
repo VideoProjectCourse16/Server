@@ -5,7 +5,8 @@ info:
   contact:
     email: mario.atria@stevejobs.academy
 servers:
-  - url: https://videoprojectcourse16.herokuapp.com
+  - url: http://localhost:3001
+  #- url: https://videoprojectcourse16.herokuapp.com
 tags:
   - name: Auth
     description: Auth stuffs
@@ -434,30 +435,33 @@ components:
     Movie:
       type: object
       properties:
-        id:
-          type: string
-        title:
-          type: string
-        popularity:
-          type: number
-        genre:
-          type: string
-        original_language:
-          type: string
-        plot:
-          type: string
-        poster_path:
-          type: number
-        trailer:
-          type: string
-        backdrop_path:
-          type: string
-        release_date:
-          type: string
-        adult:
-          type: boolean
-        vote_average:
-          type: string
+        movie:
+          type: object
+          properties:
+            id:
+              type: string
+            title:
+              type: string
+            popularity:
+              type: number
+            genre:
+              type: string
+            original_language:
+              type: string
+            plot:
+              type: string
+            poster_path:
+              type: number
+            trailer:
+              type: string
+            backdrop_path:
+              type: string
+            release_date:
+              type: string
+            adult:
+              type: boolean
+            vote_average:
+              type: string
     UnauthorizedError:
       type: object
       properties:

@@ -12,7 +12,6 @@ const router = express.Router();
 
 router.post(`/favorites`, auth, userInfo, addFavorite, (_, res) => {
     let favorite: Partial<Favorite> = {
-        //username: res.locals.username,
         movieId: res.locals.movieId
     }
     const { username }: Favorite = res.locals.token
@@ -44,17 +43,6 @@ router.delete(`/:id/favorites/:movieId`, auth, async ({ params: { id, movieId } 
         res.status(404).json({ error: "404", message: "User not found" })
     }
 })
-
-/*router.delete('/:id', async ({ params: { id } }, res) => {
-    const users = formatCollection<User>(await db.collection("Users").get());
-    const index = users.findIndex(({ id: uid }) => uid === id);
-    if (index > -1) {
-        db.collection('Users').doc(id).delete();
-        res.json({ message: "user removed" })
-    } else {
-        res.status(404).json({ error: "404", message: "User not found" })
-    }
-})*/
 
 export default router;
 

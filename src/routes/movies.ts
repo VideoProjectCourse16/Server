@@ -25,17 +25,5 @@ router.get('/:id', async ({ params: { id }}: Request<Movie, {}, {}, {}>, res) =>
         })
 })
 
-// router.post('/', async ({body: {title, description}}, res) => {
-//     const resp = formatCollection(await db.collection("Films").get());
-//     const max = Math.max(...resp.map(({id}) => Number(id)) as number[]) + 1;
-//     const docRef = db.collection('Films').doc(String(max));
-//     await docRef.set({
-//         title: title,
-//         description: description
-//     })
-//     res.json({message: 'film aggiunto'});
-// })
-
-
 
 export default router;

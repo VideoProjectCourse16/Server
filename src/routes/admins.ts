@@ -1,7 +1,6 @@
 import express, { Request, Response } from "express";
 import db from "../connection/connection";
 import { auth } from "../middlewares/auth/auth";
-import { Favorite } from "../models/favorites.model";
 import { Movie } from "../models/movies.model";
 import { User } from "../models/user.model";
 import { formatCollection } from "../utils";

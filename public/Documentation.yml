@@ -5,8 +5,8 @@ info:
   contact:
     email: mario.atria@stevejobs.academy
 servers:
-  #- url: http://localhost:3001
-  - url: https://videoprojectcourse16.herokuapp.com
+  - url: http://localhost:3001
+  #- url: https://videoprojectcourse16.herokuapp.com
 tags:
   - name: Auth
     description: Auth stuffs
@@ -93,7 +93,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Movie"
+              type: object
+              properties:
+                movieId:
+                  type: string
       responses:
         "200":
           description: OK
@@ -509,8 +512,13 @@ components:
         favorite:
           type: object
           properties:
+            id: 
+              type: string
             movieId:
               type: string
+            username: 
+              type: string
+
     AddedMovie:
       type: object
       properties:

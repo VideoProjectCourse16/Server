@@ -5,8 +5,8 @@ info:
   contact:
     email: mario.atria@stevejobs.academy
 servers:
-  - url: http://localhost:3001
-  #- url: https://videoprojectcourse16.herokuapp.com
+  #- url: http://localhost:3001
+  - url: https://videoprojectcourse16.herokuapp.com
 tags:
   - name: Auth
     description: Auth stuffs

@@ -5,7 +5,7 @@ info:
   contact:
     email: mario.atria@stevejobs.academy
 servers:
-  #- url: http://localhost:3001
+  - url: http://localhost:3001
   - url: https://videoprojectcourse16.herokuapp.com
 tags:
   - name: Auth
@@ -482,27 +482,9 @@ components:
             properties:
               id:
                 type: string
-              title:
+              movieId:
                 type: string
-              popularity:
-                type: number
-              genre:
-                type: string
-              original_language:
-                type: string
-              plot:
-                type: string
-              poster_path:
-                type: number
-              trailer:
-                type: string
-              backdrop_path:
-                type: string
-              release_date:
-                type: string
-              adult:
-                type: boolean
-              vote_average:
+              username:
                 type: string
     Favorite:
       type: object

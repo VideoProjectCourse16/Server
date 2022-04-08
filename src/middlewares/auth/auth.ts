@@ -6,9 +6,9 @@ import db from "../../connection/connection";
 
 
 
-export const auth = (async ({headers: {token}}: Request, res: Response, next: NextFunction) => {
+export const auth = (async ({headers: {authorization}}: Request, res: Response, next: NextFunction) => {
     try{
-        res.locals.token =  jwt.verify((token! as string).split(' ')[1], 'shhhhh');
+        res.locals.token =  jwt.verify((authorization! as string).split(' ')[1], 'shhhhh');
         const users = formatCollection(await db.collection("Users").get()) as User[];
         const {username} = res.locals.token;
         const user =users.find((user) => user.username === username);
